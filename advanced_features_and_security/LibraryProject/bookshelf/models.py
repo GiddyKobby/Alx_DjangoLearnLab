@@ -61,7 +61,7 @@ class Book(models.Model):
         # permissions live under the app label 'bookshelf'
         permissions = [
             ("can_view_book", "Can view book"),
-            ("can_add_book", "Can add book"),
+            ("can_create_book", "Can create book"),
             ("can_change_book", "Can change book"),
             ("can_delete_book", "Can delete book"),
         ]
