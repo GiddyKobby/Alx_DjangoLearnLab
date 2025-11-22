@@ -100,3 +100,13 @@ def delete_book(request, pk):
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book.html', {'book': book})
 
+def book_list(request):
+    search = request.GET.get("search", "").strip()
+
+    books = Book.objects.all()
+
+    if search:
+        books = books.filter(title__icontains=search)  # ORM filtering (safe)
+
+    return render(request, "bookshelf/book_list.html", {"books": books})
+
