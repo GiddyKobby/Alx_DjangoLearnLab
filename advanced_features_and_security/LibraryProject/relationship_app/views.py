@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.contrib.auth.decorators import permission_required
 
+
 # -----------------------------
 # Existing views
 # -----------------------------
@@ -101,3 +102,10 @@ def delete_book(request, book_id):
         book.delete()
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book.html', {'book': book})
+
+# List books (requires can_view permission)
+@permission_required("relationship_app.can_view", raise_exception=True)
+def list_books(request):
+    books = Book.objects.all()  # Query all books
+    return render(request, "relationship_app/list_books.html", {"books": books})
+
