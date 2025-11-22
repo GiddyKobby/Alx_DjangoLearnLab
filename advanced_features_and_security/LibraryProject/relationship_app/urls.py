@@ -3,6 +3,9 @@ from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
+    # root -> book list (so visiting / will show the list)
+    path('', views.list_books, name='home'),
+
     # Book and library views
     path('books/', views.list_books, name='list_books'),
     path('books/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
