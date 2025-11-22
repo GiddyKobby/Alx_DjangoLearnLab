@@ -68,7 +68,7 @@ def member_view(request):
 
 # Add book (requires can_add_book permission)
 @permission_required('relationship_app.can_add_book', raise_exception=True)
-def add_book(request):
+def create_book(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         author_id = request.POST.get('author')
