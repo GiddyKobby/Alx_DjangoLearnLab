@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 # Function-based view: list all books (permission-protected)
 @permission_required('relationship_app.can_view_book', raise_exception=True)
-def list_books(request):
+def book_list(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
