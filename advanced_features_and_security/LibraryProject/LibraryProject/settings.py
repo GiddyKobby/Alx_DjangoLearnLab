@@ -32,16 +32,25 @@ SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False # Usually leave False so front-end frameworks can read the token; decide based on your architecture
 
+
+
 # HSTS — only enable when you have HTTPS fully configured
 SECURE_HSTS_SECONDS = 31536000 # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 
-# Redirect all HTTP to HTTPS
-SECURE_SSL_REDIRECT = True
+# Redirect all HTTP to HTTPS only in production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
 
 
+# Optional: SameSite cookies (protects against CSRF)
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+
+# Optional: Ensure Django knows HTTPS proxy headers (for real deployments)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Application definition
 
 INSTALLED_APPS = [
