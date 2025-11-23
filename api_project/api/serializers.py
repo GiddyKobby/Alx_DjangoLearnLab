@@ -4,4 +4,4 @@ from .models import Book
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'published_date', 'isbn']
+        fields = '__all__'   # include all fields of the model
