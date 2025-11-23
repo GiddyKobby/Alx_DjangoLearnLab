@@ -1,5 +1,3 @@
-
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -11,16 +9,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = False
 # SECURITY WARNING: keep the secret key used in production secret!
 import os
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'replace-this-in-prod')
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "replace-this-in-prod")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
 
 # Security-related headers and options
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY' # or 'SAMEORIGIN' if frames are required for trusted hosts
+X_FRAME_OPTIONS = "DENY"  # or 'SAMEORIGIN' if frames are required for trusted hosts
 
 
 # Cookies — only over HTTPS in production
@@ -30,12 +29,11 @@ SESSION_COOKIE_SECURE = True
 
 # Use HttpOnly on cookies to prevent JS access
 SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = False # Usually leave False so front-end frameworks can read the token; decide based on your architecture
-
+CSRF_COOKIE_HTTPONLY = False  # Usually leave False so front-end frameworks can read the token; decide based on your architecture
 
 
 # HSTS — only enable when you have HTTPS fully configured
-SECURE_HSTS_SECONDS = 31536000 # 1 year
+SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
@@ -60,10 +58,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'bookshelf',
-    'relationship_app',
-    'csp',
-  
+    "bookshelf",
+    "relationship_app",
+    "csp",
 ]
 
 AUTH_USER_MODEL = "bookshelf.CustomUser"
@@ -74,7 +71,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'",)
-CSP_IMG_SRC = ("'self'", 'data:')
+CSP_IMG_SRC = ("'self'", "data:")
 CSP_FONT_SRC = ("'self'",)
 CSP_CONNECT_SRC = ("'self'",)
 CSP_FRAME_ANCESTORS = ("'none'",)
@@ -82,7 +79,7 @@ CSP_FRAME_ANCESTORS = ("'none'",)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    'csp.middleware.CSPMiddleware',
+    "csp.middleware.CSPMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -92,26 +89,25 @@ MIDDLEWARE = [
 ]
 
 
-
 # Optionally report CSP violations to a reporting endpoint during testing
 # CSP_REPORT_URI = '/csp-report/'
 
 
 # Logging for security-related events
 LOGGING = {
-'version': 1,
-'disable_existing_loggers': False,
-'handlers': {
-'console': {
-'class': 'logging.StreamHandler',
-},
-},
-'loggers': {
-'django.security': {
-'handlers': ['console'],
-'level': 'WARNING',
-},
-},
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.security": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
+    },
 }
 
 ROOT_URLCONF = "LibraryProject.urls"

@@ -5,6 +5,7 @@ from django.dispatch import receiver
 
 User = get_user_model()
 
+
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
@@ -15,7 +16,7 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=100)
     # changed to ForeignKey so views that call get_object_or_404(Author, id=...) work
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
     publication_year = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
@@ -49,12 +50,12 @@ class Librarian(models.Model):
 
 class UserProfile(models.Model):
     ROLE_CHOICES = (
-        ('Admin', 'Admin'),
-        ('Librarian', 'Librarian'),
-        ('Member', 'Member'),
+        ("Admin", "Admin"),
+        ("Librarian", "Librarian"),
+        ("Member", "Member"),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="Member")
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
@@ -64,7 +65,7 @@ class UserProfile(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance, role='Member')
+        UserProfile.objects.create(user=instance, role="Member")
 
 
 @receiver(post_save, sender=User)
