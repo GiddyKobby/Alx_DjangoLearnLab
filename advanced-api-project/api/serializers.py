@@ -20,6 +20,8 @@ class BookSerializer(serializers.ModelSerializer):
             )
         return value
 
+
+
 class AuthorSerializer(serializers.ModelSerializer):
     """
     Serializes Author model.
