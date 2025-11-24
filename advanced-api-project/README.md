@@ -10,3 +10,20 @@
 ## Permissions
 - List & Detail: Public
 - Create, Update, Delete: Authenticated users only
+
+
+Testing Overview
+
+This project uses Django’s built-in testing framework and Django REST Framework's APIClient for API testing.
+
+What is Tested
+
+Book CRUD operations
+
+Filtering
+
+Searching
+
+Ordering
+
+Authentication
