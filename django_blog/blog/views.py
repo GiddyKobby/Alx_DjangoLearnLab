@@ -6,9 +6,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 
-from .forms import UserRegistrationForm, UserUpdateForm, PostForm
-from .models import Post
+from .forms import UserRegistrationForm, UserUpdateForm, PostForm, CommentForm
+from .models import Post, Comment
 
 
 # ------------------------
@@ -115,3 +116,42 @@ def post_update(request, pk):
 
 def post_delete(request, pk):
     return render(request, 'blog/post_confirm_delete.html')
+
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        form.instance.author = self.request.user
+        form.instance.post = post
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return redirect('post-detail', pk=self.kwargs['post_id']).url
+    
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
+    def get_success_url(self):
+        return redirect('post-detail', pk=self.object.post.pk).url
+    
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
+    def get_success_url(self):
+        return redirect('post-detail', pk=self.object.post.pk).url
