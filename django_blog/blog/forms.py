@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile
 from .models import Post, Comment, Tag
+from taggit.forms import TagWidget 
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text="Required. Enter a valid email address.")
@@ -35,7 +36,9 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'tag_string']  # author is set in the view
-
+        widgets = {
+            'tags': TagWidget(),
+        }
     def __init__(self, *args, **kwargs):
         # if instance provided, populate tag_string with existing tags
         super().__init__(*args, **kwargs)
