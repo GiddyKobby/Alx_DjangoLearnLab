@@ -26,6 +26,12 @@
         {% endblock %}
     </div>
 
+    <form method="GET" action="{% url 'blog:search' %}" class="search-form">
+        <input type="text" name="q" placeholder="Search posts or tags..." value="{{ request.GET.q|default_if_none:'' }}">
+        <button type="submit">Search</button>
+    </form>
+
+
     <footer>
         <p>&copy; 2024 Django Blog</p>
     </footer>

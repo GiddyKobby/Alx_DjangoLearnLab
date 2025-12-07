@@ -17,3 +17,18 @@
     <a href="{% url 'post-create' %}" class="btn">Create New Post</a>
 {% endif %}
 {% endblock %}
+
+{# inside post loop or detail view #}
+{% if post.tags.all %}
+  <p class="tags">
+    Tags:
+    {% for tag in post.tags.all %}
+      <a href="{% url 'blog:posts-by-tag' tag.name %}" class="tag-link">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+{% endif %}
+
+<form method="GET" action="{% url 'blog:search' %}" class="search-form">
+    <input type="text" name="q" placeholder="Search posts or tags..." value="{{ request.GET.q|default_if_none:'' }}">
+    <button type="submit">Search</button>
+</form>

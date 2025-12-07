@@ -7,9 +7,9 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
-
+from django.db.models import Q
 from .forms import UserRegistrationForm, UserUpdateForm, PostForm, CommentForm
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 
 
 # ------------------------
@@ -155,3 +155,81 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return redirect('post-detail', pk=self.object.post.pk).url
+    
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+    ordering = ['-created_at']
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+    context_object_name = 'post'
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        response = super().form_valid(form)
+        # form.save() already saved tags in PostForm.save with commit=True
+        return response
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # PostForm.save handled tags
+        return response
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    success_url = reverse_lazy('blog:post_list')
+    template_name = 'blog/post_confirm_delete.html'
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
+
+# List posts by tag
+class TagPostListView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        tag_name = self.kwargs['tag_name']
+        return Post.objects.filter(tags__name__iexact=tag_name).distinct().order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['tag_name'] = self.kwargs['tag_name']
+        return ctx
+
+# Search view (function-based for simplicity)
+def search(request):
+    query = request.GET.get('q', '').strip()
+    posts = Post.objects.none()
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct().order_by('-created_at')
+    context = {
+        'posts': posts,
+        'query': query,
+    }
+    return render(request, 'blog/search_results.html', context)
+
