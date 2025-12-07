@@ -46,3 +46,8 @@
 {% else %}
 <p><a href="{% url 'login' %}">Login</a> to leave a comment.</p>
 {% endif %}
+<a href="{% url 'comment-update' comment.pk %}">Edit</a>
+<a href="{% url 'comment-delete' comment.pk %}">Delete</a>
+
+
+
