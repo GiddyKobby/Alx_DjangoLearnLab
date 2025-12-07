@@ -1,0 +1,50 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h2>Your Profile</h2>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <fieldset>
+    <legend>User info</legend>
+    {{ u_form.non_field_errors }}
+    <div>
+      {{ u_form.username.label_tag }}<br>
+      {{ u_form.username }}{{ u_form.username.errors }}
+    </div>
+    <div>
+      {{ u_form.email.label_tag }}<br>
+      {{ u_form.email }}{{ u_form.email.errors }}
+    </div>
+    <div>
+      {{ u_form.first_name.label_tag }}<br>{{ u_form.first_name }}
+    </div>
+    <div>
+      {{ u_form.last_name.label_tag }}<br>{{ u_form.last_name }}
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Profile</legend>
+    {{ p_form.non_field_errors }}
+    <div>
+      {{ p_form.bio.label_tag }}<br>
+      {{ p_form.bio }}{{ p_form.bio.errors }}
+    </div>
+    <div>
+      {{ p_form.avatar.label_tag }}<br>
+      {{ p_form.avatar }}{{ p_form.avatar.errors }}
+    </div>
+
+    {% if request.user.profile.avatar %}
+      <div>
+        <img src="{{ request.user.profile.avatar.url }}" alt="avatar" style="max-width:150px; max-height:150px;">
+      </div>
+    {% endif %}
+  </fieldset>
+
+  <button type="submit">Update Profile</button>
+</form>
+{% endblock %}
