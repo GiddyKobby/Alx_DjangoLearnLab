@@ -1,8 +1,23 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Post, Comment
+from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly
+
+User = get_user_model()
+
+class FeedView(generics.ListAPIView):
+    """
+    GET /api/feed/  -> paginated list of posts from users the request.user follows
+    """
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]   # only authenticated users get a personalized feed
+    pagination_class = None  # if you want default pagination from settings, remove this line
+
+    def get_queryset(self):
+        user = self.request.user
+        following_qs = user.following.all()
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().select_related('author').prefetch_related('comments')
