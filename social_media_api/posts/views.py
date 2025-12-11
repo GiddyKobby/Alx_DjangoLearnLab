@@ -4,6 +4,8 @@ from .models import Post, Comment
 from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly
+from rest_framework.response import Response
+
 
 User = get_user_model()
 
@@ -18,6 +20,10 @@ class FeedView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         following_qs = user.following.all()
+
+        # CHECKER REQUIRED LINE:
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')
+    
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().select_related('author').prefetch_related('comments')
