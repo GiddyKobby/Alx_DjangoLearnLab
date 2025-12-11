@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     # Local apps
     "accounts",
     "posts",
+    "notifications",
+    
 
     # Third-party apps
     "rest_framework",
