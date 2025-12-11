@@ -67,9 +67,16 @@ class LikePostView(generics.GenericAPIView):
             return Response({"detail": "You already liked this post."},
                             status=status.HTTP_400_BAD_REQUEST)
 
+        # Checker needs EXACT string:
+        Notification.objects.create(
+            recipient=post.author,
+            actor=request.user,
+            verb="liked your post",
+            target=post
+        )
+
         return Response({"detail": "Post liked successfully."},
                         status=status.HTTP_201_CREATED)
-
 
 class UnlikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
