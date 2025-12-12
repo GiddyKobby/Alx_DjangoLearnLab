@@ -21,7 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = False
 SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
 
-ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS', 'kobbyapi-d6a99e27c4ac.herokuapp.com').split(',')
+ALLOWED_HOSTS = env(
+    'DJANGO_ALLOWED_HOSTS', 
+    'kobbyapi-d6a99e27c4ac.herokuapp.com'
+).split(',')
 # Example: DJANGO_ALLOWED_HOSTS="example.com,www.example.com,127.0.0.1"
 
 
@@ -31,7 +34,11 @@ ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS', 'kobbyapi-d6a99e27c4ac.herokuapp.com
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_SSL_REDIRECT = True
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+else:
+    SECURE_SSL_REDIRECT = False
+
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
@@ -39,6 +46,7 @@ SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # ==============================
 # APPLICATIONS
@@ -103,6 +111,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "social_media_api.wsgi.application"
+ASGI_APPLICATION = "social_media_api.asgi.application"
 
 
 # ==============================
@@ -166,6 +175,8 @@ REST_FRAMEWORK = {
 # ==============================
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
