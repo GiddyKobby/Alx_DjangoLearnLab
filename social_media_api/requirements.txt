@@ -2,3 +2,9 @@ Django>=4.2
 djangorestframework>=3.14
 djangorestframework-authtoken>=1.0
 Pillow>=9.0
+dj-database-url 
+psycopg2-binary 
+django-storages 
+boto3 
+whitenoise 
+gunicorn
