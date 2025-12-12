@@ -8,3 +8,5 @@ django-storages
 boto3 
 whitenoise 
 gunicorn
+python-dotenv
+django-filter

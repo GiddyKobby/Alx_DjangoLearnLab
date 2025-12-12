@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = False
 SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
 
-ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS', 'your-domain.com').split(',')
+ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS', 'kobbyapi-d6a99e27c4ac.herokuapp.com').split(',')
 # Example: DJANGO_ALLOWED_HOSTS="example.com,www.example.com,127.0.0.1"
 
 
@@ -120,7 +120,8 @@ import dj_database_url
 DATABASES = {
     'default': dj_database_url.parse(
         env('DATABASE_URL', required=True),
-        conn_max_age=600
+        conn_max_age=600,
+        ssl_require=True
     )
 }
 
