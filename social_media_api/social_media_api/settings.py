@@ -1,7 +1,10 @@
 import os
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
+import dj_database_url
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # ==============================
 # Environment Helper
@@ -12,21 +15,18 @@ def env(key, default=None, required=False):
         raise ImproperlyConfigured(f"Missing environment variable {key}")
     return val
 
-
 # ==============================
 # BASIC SETTINGS
 # ==============================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
 
 ALLOWED_HOSTS = env(
     'DJANGO_ALLOWED_HOSTS', 
     'kobbyapi-d6a99e27c4ac.herokuapp.com'
 ).split(',')
-# Example: DJANGO_ALLOWED_HOSTS="example.com,www.example.com,127.0.0.1"
-
 
 # ==============================
 # SECURITY HARDENING
@@ -34,10 +34,7 @@ ALLOWED_HOSTS = env(
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-else:
-    SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = not DEBUG
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -71,16 +68,12 @@ INSTALLED_APPS = [
     "django_filters",
 ]
 
-
 # ==============================
 # MIDDLEWARE
 # ==============================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-
-    # Whitenoise after SecurityMiddleware
     "whitenoise.middleware.WhiteNoiseMiddleware",
-
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -88,7 +81,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 
 # ==============================
 # URL / TEMPLATES
@@ -113,19 +105,9 @@ TEMPLATES = [
 WSGI_APPLICATION = "social_media_api.wsgi.application"
 ASGI_APPLICATION = "social_media_api.asgi.application"
 
-
 # ==============================
 # DATABASE
 # ==============================
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
-import dj_database_url
-
 DATABASES = {
     'default': dj_database_url.parse(
         env('DATABASE_URL', required=True),
@@ -133,7 +115,6 @@ DATABASES = {
         ssl_require=True
     )
 }
-
 
 # ==============================
 # PASSWORD VALIDATION
@@ -145,10 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
-# Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
-
 
 # ==============================
 # DRF SETTINGS
@@ -169,7 +147,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-
 # ==============================
 # STATIC & MEDIA
 # ==============================
@@ -181,7 +158,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-
 # ==============================
 # INTERNATIONALIZATION
 # ==============================
@@ -189,6 +165,5 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
-
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
