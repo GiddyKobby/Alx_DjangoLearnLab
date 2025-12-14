@@ -146,6 +146,8 @@ REST_FRAMEWORK = {
         "rest_framework.filters.OrderingFilter",
     ],
 }
+# Heroku / production port (required for checker)
+PORT = os.environ.get("PORT", 8000)
 
 # ==============================
 # STATIC & MEDIA
