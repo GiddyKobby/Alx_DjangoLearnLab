@@ -20,7 +20,7 @@ def env(key, default=None, required=False):
 # ==============================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = False #os.environ.get('DEBUG', 'False') == 'True'
 SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
 
 ALLOWED_HOSTS = env(
